@@ -2,7 +2,6 @@ import os
 from argument import config2string, parse_args
 from utils import seed_everything
 import torch
-import yaml
 from gmeta import gmeta_trainer
 
 import warnings

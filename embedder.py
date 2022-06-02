@@ -3,9 +3,6 @@ import torch.nn as nn
 import os
 from torch_geometric.data import DataLoader
 from argument import config2string
-from tensorboardX import SummaryWriter
-
-from sklearn.decomposition import PCA
 from utils import *
 
 # _____________
