@@ -7,14 +7,13 @@ import csv
 import random
 import pickle
 from torch.utils.data import DataLoader
-# import dgl
 import networkx as nx
 import itertools
 
 
 class Subgraphs(Dataset):
     def __init__(self, root, mode, subgraph2label, n_way, k_shot, k_query, batchsz, args, adjs, h):
-        self.batchsz = batchsz  # episodes num 50번
+        self.batchsz = batchsz  # episodes num
         self.n_way = n_way  # n-way
         self.k_shot = k_shot  # k-shot support set
         self.k_query = k_query  # for query set
@@ -50,18 +49,18 @@ class Subgraphs(Dataset):
         self.G = []
 
         for i in adjs:
-            self.G.append(i)  # 그냥 그래프 하나 들어갔는디? Disjoint라서 그래프 1개만 쓰나봄
+            self.G.append(i)
 
         self.subgraphs = {}
 
         if self.task_setup == 'Disjoint':
             self.data = []
 
-            # i : enumerate, k : label, v : 그 label에 속하는 subgraph의 index
+            # i : enumerate, k : label, v : subgraph's index
             for i, (k, v) in enumerate(dictLabels.items()):
                 # [[subgraph1, subgraph2, ...], [subgraph111, ...]]
                 self.data.append(v)
-            self.cls_num = len(self.data)  # 덩어리 개수는 class(label)의 개수
+            self.cls_num = len(self.data)
 
             self.create_batch_disjoint(self.batchsz)
 
@@ -147,16 +146,16 @@ class Subgraphs(Dataset):
                 n_l = [[n.item() for n in G.in_edges(i)[0]] for i in f_hop]
                 h_hops_neighbor = torch.tensor(
                     list(set(list(itertools.chain(*n_l)) + f_hop + [i]))).numpy()
-            # elif self.h == 1:
-            #     f_hop = [n.item() for n in G.in_edges(i)[0]]
-            #     h_hops_neighbor = torch.tensor(list(set(f_hop + [i]))).numpy()
-            # elif self.h == 3:
-            #     f_hop = [n.item() for n in G.in_edges(i)[0]]
-            #     n_2 = [[n.item() for n in G.in_edges(i)[0]] for i in f_hop]
-            #     n_3 = [[n.item() for n in G.in_edges(i)[0]]
-            #            for i in list(itertools.chain(*n_2))]
-            #     h_hops_neighbor = torch.tensor(list(set(list(itertools.chain(
-            #         *n_2)) + list(itertools.chain(*n_3)) + f_hop + [i]))).numpy()
+            elif self.h == 1:
+                f_hop = [n.item() for n in G.in_edges(i)[0]]
+                h_hops_neighbor = torch.tensor(list(set(f_hop + [i]))).numpy()
+            elif self.h == 3:
+                f_hop = [n.item() for n in G.in_edges(i)[0]]
+                n_2 = [[n.item() for n in G.in_edges(i)[0]] for i in f_hop]
+                n_3 = [[n.item() for n in G.in_edges(i)[0]]
+                       for i in list(itertools.chain(*n_2))]
+                h_hops_neighbor = torch.tensor(list(set(list(itertools.chain(
+                    *n_2)) + list(itertools.chain(*n_3)) + f_hop + [i]))).numpy()
             if h_hops_neighbor.reshape(-1,).shape[0] > self.sample_nodes:
                 h_hops_neighbor = np.random.choice(
                     h_hops_neighbor, self.sample_nodes, replace=False)

@@ -1,4 +1,3 @@
-
 from embedder import embedder
 from tqdm import tqdm
 from utils import *
@@ -12,8 +11,8 @@ from torch_geometric.utils import k_hop_subgraph
 
 
 class gmeta_trainer(embedder):
-    def __init__(self, args, conf, set_seed):
-        embedder.__init__(self, args, conf, set_seed)
+    def __init__(self, args, set_seed):
+        embedder.__init__(self, args, set_seed)
         self.total_class = len(np.unique(np.array(self.labels.cpu())))
         print('There are {} classes '.format(self.total_class))
         self.labels_num = args.way
@@ -37,9 +36,6 @@ class gmeta_trainer(embedder):
         print(self.maml)
         print('Total trainable tensors:', num)
 
-        max_acc = 0
-        model_max = copy.deepcopy(self.maml)
-
         self.config_str = config2string(args)
         self.args = args
         self.set_seed = set_seed
@@ -59,25 +55,25 @@ class gmeta_trainer(embedder):
             # _______________________
             # support set subgraphing
             spt_sub = k_hop_subgraph(node_idx=torch.LongTensor(
-                id_support), num_hops=self.args.h, edge_index=self.adj._indices())  # (subgraph 속 node_id, subgraph의 edge_index, 그 안에서 중심 노드의 순서 index, edge_mask)
+                id_support), num_hops=self.args.h, edge_index=self.adj._indices())
             node_subgraph_spt = spt_sub[0]
             edge_subgraph_spt = spt_sub[1]
             center_node_relative_index_spt = spt_sub[2]
 
             spt_sub_relabel = k_hop_subgraph(node_idx=torch.LongTensor(
-                id_support), num_hops=self.args.h, edge_index=self.adj._indices(), relabel_nodes=True)  # (subgraph 속 node_id, subgraph의 edge_index, 그 안에서 중심 노드의 순서 index, edge_mask)
+                id_support), num_hops=self.args.h, edge_index=self.adj._indices(), relabel_nodes=True)
             edge_subgraph_spt_relabel = spt_sub_relabel[1]
 
             # _____________________
             # query set subgraphing
             qry_sub = k_hop_subgraph(node_idx=torch.LongTensor(
-                id_query), num_hops=self.args.h, edge_index=self.adj._indices())  # (subgraph 속 node_id, subgraph의 edge_index, 그 안에서 중심 노드의 순서 index, edge_mask)
+                id_query), num_hops=self.args.h, edge_index=self.adj._indices())
             node_subgraph_qry = qry_sub[0]
             edge_subgraph_qry = qry_sub[1]
             center_node_relative_index_qry = qry_sub[2]
 
             spt_qry_relabel = k_hop_subgraph(node_idx=torch.LongTensor(
-                id_query), num_hops=self.args.h, edge_index=self.adj._indices(), relabel_nodes=True)  # (subgraph 속 node_id, subgraph의 edge_index, 그 안에서 중심 노드의 순서 index, edge_mask)
+                id_query), num_hops=self.args.h, edge_index=self.adj._indices(), relabel_nodes=True)
             edge_subgraph_qry_relabel = spt_qry_relabel[1]
 
             y_spt = self.labels[id_support]

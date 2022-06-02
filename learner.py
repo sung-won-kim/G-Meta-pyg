@@ -1,6 +1,3 @@
-from torch.nn import Module
-from torch.nn.parameter import Parameter
-import math
 import torch
 import torch.nn.functional as F
 import dgl.function as fn

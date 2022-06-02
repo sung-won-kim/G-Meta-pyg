@@ -16,10 +16,7 @@ torch.set_num_threads(2)
 
 def main(args):
 
-    with open('configuration.yaml') as f:
-        conf = yaml.safe_load(f)
-
-    embedder = gmeta_trainer(args, conf, set_seed)
+    embedder = gmeta_trainer(args, set_seed)
 
     (
         best_acc_train,

@@ -13,11 +13,10 @@ from utils import *
 
 
 class embedder(nn.Module):
-    def __init__(self, args, conf, set_seed):
+    def __init__(self, args, set_seed):
         super().__init__()
 
         self.args = args
-        self.conf = conf
         self.set_seed = set_seed
         self.config_str = config2string(args)
         print("\n[Config] {}\n".format(self.config_str))
@@ -32,11 +31,8 @@ class embedder(nn.Module):
         # episodic training
 
         # load dataset
-        if args.dataset == 'arxiv':
-            self.edges, self.adj, self.features, self.labels, self.degrees, self.class_list_train, self.class_list_valid, self.class_list_test, self.id_by_class = load_data_arxiv()
-        else:
-            self.edges, self.adj, self.features, self.labels, self.degrees, self.class_list_train, self.class_list_valid, self.class_list_test, self.id_by_class = load_data(
-                args.dataset)
+        self.edges, self.adj, self.features, self.labels, self.degrees, self.class_list_train, self.class_list_valid, self.class_list_test, self.id_by_class = load_data(
+            args.dataset)
 
         self.edges = self.edges.to(self.device)
         self.adj = self.adj.to(self.device)

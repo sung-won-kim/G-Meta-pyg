@@ -18,33 +18,6 @@ import pickle
 valid_num_dic = {"Amazon_clothing": 17, "Amazon_eletronics": 36, "dblp": 27}
 
 
-def load_data_arxiv():
-    with open('data/arxiv_pyg.pkl', 'rb') as f:
-        data = pickle.load(f)
-
-    edges = data['edge_index']
-    adj = data['adj']
-    features = data['node_attr']
-    labels = data['labels']
-    degree = data['degree']
-    class_list_train = data['class_list_train']
-    class_list_valid = data['class_list_valid']
-    class_list_test = data['class_list_test']
-    id_by_class = data['id_by_class']
-
-    return (
-        edges,
-        adj,
-        features,
-        labels,
-        degree,
-        class_list_train,
-        class_list_valid,
-        class_list_test,
-        id_by_class,
-    )
-
-
 def load_data(dataset_source):
     n1s = []
     n2s = []

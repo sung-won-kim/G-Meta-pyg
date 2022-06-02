@@ -1,6 +1,5 @@
 import argparse
 from ast import parse
-import time
 
 
 def parse_args():
@@ -8,13 +7,14 @@ def parse_args():
 
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--dataset", type=str,
-                        default="Amazon_clothing")  # "Amazon_clothing" , "Amazon_eletronics",  "dblp", "arxiv"
+                        default="Amazon_clothing")  # "Amazon_clothing" , "Amazon_eletronics",  "dblp"
     parser.add_argument("--way", type=int, default=3)
     parser.add_argument("--shot", type=int, default=3)
     parser.add_argument("--qry", type=int, default=5)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--num_seed", type=int, default=1)
     parser.add_argument("--episodes", type=int, default=30)
+    # early-stopping patience
     parser.add_argument("--patience", type=int, default=20)
     parser.add_argument("--epochs", type=int, default=2000)
 
